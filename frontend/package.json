@@ -1,0 +1,35 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "parcel index.html --dist-dir ../backend/public",
+    "tail": "npx tailwindcss -i ./src/css/style.css -o ./src/index.css --watch",
+    "build": "parcel build index.html --dist-dir ../backend/public"
+  },
+  "author": "Ower A Campos",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "parcel": "^2.12.0",
+    "postcss": "^8.4.47",
+    "process": "^0.11.10",
+    "react-select": "^5.10.0",
+    "tailwindcss": "^3.4.14",
+    "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.1",
+    "apexcharts": "^4.5.0",
+    "jspdf": "^3.0.0",
+    "react": "^18.3.1",
+    "react-apexcharts": "^1.7.0",
+    "react-data-table-component": "^7.7.0",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.27.0",
+    "styled-components": "^6.1.13",
+    "sweetalert2": "^11.14.5",
+    "sweetalert2-react-content": "^5.0.7"
+  }
+}
