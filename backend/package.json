@@ -1,0 +1,17 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "enel SVE",
+  "main": "index.ts",
+  "scripts": {
+    "test": "jest",
+    "open": "clasp open",
+    "push": "clasp push -w"
+  },
+  "author": "Ower A Campos",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/google-apps-script": "^1.0.97",
+    "typescript": "^5.8.2"
+  }
+}
