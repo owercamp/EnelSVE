@@ -1,7 +1,8 @@
 import React, { FC } from 'react'
 import Container from '../components/container'
 import TitleApp from '../components/title'
-import { BrowserRouter, Link, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Link, Navigate, Route, Routes } from 'react-router-dom'
+import Concept from './Concept'
 
 interface Props { }
 
@@ -19,9 +20,9 @@ const App: FC<Props> = ({ }) => {
               className="flex flex-wrap justify-center items-center bg-soa-light-700 dark:bg-soa-dark-900 dark:text-white text-gray-200 p-2 rounded"
             >
               <li>
-                <Link to="/Framingham">
+                <Link to="/concept">
                   <a className="max-w-fit inline-flex flex-wrap rounded hover:text-slate-300 transition px-3 py-2 border-r-2 border-l-2 border-gray-400">
-                    Item 1
+                    Conceptos SVE Auditivo {new Date().getFullYear()}
                   </a>
                 </Link>
               </li>
@@ -52,10 +53,27 @@ const App: FC<Props> = ({ }) => {
           {/* Rutas */}
           <div className="flex-grow">
             <Routes>
-              <Route path="/Framingham" element={<h1>Framingham</h1>} />
-              <Route path="/Sindrome" element={<h1>Sindrome Metabolico</h1>} />
-              <Route path="/Aterogenia" element={<h1>Aterogenia</h1>} />
-              <Route path="/Intervencion" element={<h1>Intervencion</h1>} />
+              <Route path="/concept" element={
+                <div className='mt-[68px] mb-3'>
+                  <Concept />
+                </div>
+              } />
+              <Route path="/Sindrome" element={
+                <div className='mt-[68px]'>
+                  <h1>Framingham</h1>
+                </div>
+              } />
+              <Route path="/Aterogenia" element={
+                <div className='mt-[68px]'>
+                  <h1>Framingham</h1>
+                </div>
+              } />
+              <Route path="/Intervencion" element={
+                <div className='mt-[68px]'>
+                  <h1>Framingham</h1>
+                </div>
+              } />
+              <Route path="*" element={<Navigate to="/concept" replace />} />
             </Routes>
           </div>
         </div>
