@@ -1,12 +1,29 @@
-import React, { FC } from 'react'
+import React, { FC, useEffect } from 'react'
 import Container from '../components/container'
 import TitleApp from '../components/title'
 import { BrowserRouter, Link, Navigate, Route, Routes } from 'react-router-dom'
 import Concept from './Concept'
+import General from './General'
+import { initInforms } from '../components/Informs'
 
 interface Props { }
 
 const App: FC<Props> = ({ }) => {
+
+  const [informationGraph, setInformationGraph] = React.useState([]);
+
+  useEffect(() => {
+    google.script.run.withSuccessHandler((result: any) => {
+      const total_data = JSON.parse(result);
+      const data_from_general = initInforms(total_data);
+      setInformationGraph(data_from_general[1]);
+    })
+      .withFailureHandler((error: any) => {
+
+      })
+      .getAll();
+  }, []);
+
   return (
     <Container classes="w-screen h-screen">
       <BrowserRouter>
@@ -27,9 +44,9 @@ const App: FC<Props> = ({ }) => {
                 </Link>
               </li>
               <li>
-                <Link to="/Sindrome">
+                <Link to="/general-inform">
                   <a className="max-w-fit inline-flex flex-wrap rounded hover:text-slate-300 transition px-3 py-2 border-r-2 border-l-2 border-gray-400">
-                    Item 2
+                    Informe General
                   </a>
                 </Link>
               </li>
@@ -58,9 +75,9 @@ const App: FC<Props> = ({ }) => {
                   <Concept />
                 </div>
               } />
-              <Route path="/Sindrome" element={
+              <Route path="/general-inform" element={
                 <div className='mt-[68px]'>
-                  <h1>Framingham</h1>
+                  <General infoGraph={informationGraph} />
                 </div>
               } />
               <Route path="/Aterogenia" element={
