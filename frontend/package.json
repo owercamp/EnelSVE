@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "parcel index.html --dist-dir ../backend/public",
+    "dev": "parcel index.html --dist-dir ../backend/public --no-cache",
     "tail": "npx tailwindcss -i ./src/css/style.css -o ./src/index.css --watch",
     "build": "parcel build index.html --dist-dir ../backend/public"
   },
