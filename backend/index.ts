@@ -9,7 +9,6 @@ function onOpen(e: any) {
     const recipients: any = {
       'Generar Libro': 'TODO',
       'Informes': 'abrirInforme',
-      'Verificar Intervención': 'verifiedBatched'
     };
     for (const [name, recipient] of Object.entries(recipients)) {
       menu.addItem(name, recipient);
@@ -33,4 +32,33 @@ function doGet() {
     .setFaviconUrl("https://soaics.grupoaltum.com.co/assets/media/logos/favicon.png");
 
   return output;
+}
+
+/**
+ * Retrieves all data from the sheet named "2025" in the active spreadsheet.
+ * If the sheet exists, it returns the data as a JSON string.
+ *
+ * @return {string | undefined} JSON string of sheet data or undefined if the sheet is not found.
+ */
+
+function getAll() {
+  const spreadsheet: GoogleAppsScript.Spreadsheet.Spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet: GoogleAppsScript.Spreadsheet.Sheet | null = spreadsheet.getSheetByName("2025");
+
+  if (sheet) {
+    const registers = sheet?.getDataRange().getValues();
+    return JSON.stringify(registers);
+  }
+}
+
+function abrirInforme() {
+  var html: GoogleAppsScript.HTML.HtmlOutput = HtmlService.createHtmlOutput('<html>'
+    + '<script>' +
+    "var urlToOpen = 'https://script.google.com/macros/s/AKfycbzCUaiKWseNxqiiiMNnmZjoRWdtplXvvl8RHNoZ24OmSnJ1KV6TbOlI4n83spBbXJTp/exec';" +
+    "var winRef = window.open(urlToOpen);" +
+    "google.script.host.close();"
+    + '</script>'
+    + '</html>')
+    .setWidth(90).setHeight(1);
+  SpreadsheetApp.getUi().showModalDialog(html, "Abriendo Informe");
 }
