@@ -26,7 +26,7 @@ const GraphInform: FC<Props> = ({ labels = [], seriesData = [] }) => {
   }, [seriesData, labels])
 
   return (
-    <div className="mixed-chart" style={{ position: 'relative', minWidth: '900px', minHeight: '500px' }}>
+    <div className="mixed-chart" style={{ position: 'relative', minWidth: '700px', minHeight: '700px' }}>
       <ReactApexChart
         options={state.options}
         series={state.series}
