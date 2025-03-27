@@ -17,7 +17,7 @@ const optionCharts = (labels: any) => {
         },
       }
     },
-    colors: ['#33b2df', '#546E7A', '#d4526e', '#13d8aa', '#A5978B'],
+    colors: ['#237a1b', '#757912', '#9d1518', '#261eb5', '#A5978B'],
     dataLabels: {
       enabled: true,
       textAnchor: 'start',
