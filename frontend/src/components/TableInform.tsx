@@ -1,64 +1,41 @@
 import React, { FC, useState } from 'react'
 import DataTable, { Alignment, createTheme } from 'react-data-table-component'
 
-interface Props { }
+interface Props {
+  dataTable: any
+  msg: any
+}
 
-const columns = [
-  {
-    name: 'Central',
-    selector: (row: any) => row.title,
-    sortable: true,
-    grow: 10,
-    center: true,
-    compact: true
-  },
-  {
-    name: '2025',
-    selector: (row: any) => row.yearNew,
-    sortable: true,
-    grow: 4,
-    center: true,
-    compact: true
-  },
-  {
-    name: '2024',
-    selector: (row: any) => row.yearOld,
-    sortable: true,
-    grow: 4,
-    center: true,
-    compact: true
-  },
-];
-
-const data = [
-  {
-    id: 1,
-    title: 'Beetlejuice',
-    yearNew: 12,
-    yearOld: 12
-  },
-  {
-    id: 2,
-    title: 'Ghostbusters',
-    yearNew: 10,
-    yearOld: 13
-  },
-  {
-    id: 3,
-    title: 'The Beetles',
-    yearNew: 70,
-    yearOld: 48
-  },
-  {
-    id: 4,
-    title: 'Ghostbusters 2',
-    yearNew: 20,
-    yearOld: 46
-  },
-]
-
-const TableInform: FC<Props> = ({ }) => {
+const TableInform: FC<Props> = ({ dataTable, msg }) => {
   const [filterText, setFilterText] = useState('');
+
+  const columns = [
+    {
+      name: 'Central',
+      selector: (row: any) => row.title,
+      sortable: true,
+      grow: 10,
+      center: true,
+      compact: true,
+      wrap: true
+    },
+    {
+      name: `${new Date().getFullYear()}`,
+      selector: (row: any) => row.yearNew,
+      sortable: true,
+      grow: 4,
+      center: true,
+      compact: true
+    },
+    {
+      name: `${new Date().getFullYear() - 1}`,
+      selector: (row: any) => row.yearOld,
+      sortable: true,
+      grow: 4,
+      center: true,
+      compact: true
+    },
+  ];
 
   const paginationComponentOptions = {
     rowsPerPageText: 'Filas por página',
@@ -89,6 +66,14 @@ const TableInform: FC<Props> = ({ }) => {
     },
   }, 'dark');
 
+  const customStyles: any = {
+    cells: {
+      style: {
+        textAlign: 'center'
+      }
+    }
+  }
+
   const handleFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFilterText(e.target.value);
   };
@@ -97,7 +82,7 @@ const TableInform: FC<Props> = ({ }) => {
     <>
       <DataTable
         columns={columns}
-        data={data}
+        data={dataTable}
         pagination
         paginationComponentOptions={paginationComponentOptions}
         responsive={true}
@@ -115,7 +100,9 @@ const TableInform: FC<Props> = ({ }) => {
             }}
           />
         }
+        customStyles={customStyles}
         subHeaderAlign={Alignment.CENTER}
+
         theme='solarized'
       />
     </>
