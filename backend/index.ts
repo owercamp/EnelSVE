@@ -41,14 +41,30 @@ function doGet() {
  * @return {string | undefined} JSON string of sheet data or undefined if the sheet is not found.
  */
 
-function getAll() {
+function getAll(year: number) {
   const spreadsheet: GoogleAppsScript.Spreadsheet.Spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-  const sheet: GoogleAppsScript.Spreadsheet.Sheet | null = spreadsheet.getSheetByName("2025");
+  const currentSheetYear: GoogleAppsScript.Spreadsheet.Sheet | null = spreadsheet.getSheetByName(String(year));
+  const oldSheetYear: GoogleAppsScript.Spreadsheet.Sheet | null = spreadsheet.getSheetByName(String(year - 1));
+  let registersCurrentYear: any;
+  let registersOldYear: any;
 
-  if (sheet) {
-    const registers = sheet?.getDataRange().getValues();
+  if (currentSheetYear) {
+    registersCurrentYear = currentSheetYear?.getRange(1, 1, currentSheetYear.getLastRow(), currentSheetYear.getLastColumn()).getValues();
+  }
+
+  if (oldSheetYear) {
+    registersOldYear = oldSheetYear?.getRange(1, 1, oldSheetYear.getLastRow(), oldSheetYear.getLastColumn()).getValues();
+  }
+
+  if (registersCurrentYear || registersOldYear) {
+    const registers = {
+      yearCurrent: registersCurrentYear,
+      yearOld: registersOldYear
+    };
+
     return JSON.stringify(registers);
   }
+
 }
 
 function abrirInforme() {
