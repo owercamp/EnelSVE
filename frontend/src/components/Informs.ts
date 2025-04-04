@@ -1,4 +1,4 @@
-import { filtered, filteredDifferent } from "../services/services";
+import { counterCentral, filtered, filteredDifferent, normalizeText, unique } from "../services/services";
 import { verifiedZero } from "../services/verified";
 
 const counterState = (states: any, registers: any) => {
@@ -11,7 +11,6 @@ const counterState = (states: any, registers: any) => {
     CONFIRMADO: [],
     DIFFERENCE: []
   }
-  registers.shift();
 
   //? SANO
   filtering = filtered(SANO, registers, 50);
@@ -87,7 +86,27 @@ const initInforms = (information: any) => {
     DIFFERENCE: 'SIN ESTADO'
   }
 
-  const state_number = counterState(states, information);
+  const state_number = counterState(states, information['yearCurrent'].slice(1));
+  let centralsCurrentYear = unique(information['yearCurrent'].slice(1), 6);
+  let centralsOldYear = unique(information['yearOld'].slice(1), 6);
+  let unionCemtrals = [...centralsCurrentYear, ...centralsOldYear];
+  const cleanedDataSet = new Set<string>();
+
+
+  const centrals = unionCemtrals.filter((element: string) => {
+    let normalize = normalizeText(element.toLocaleLowerCase().trim()).replace(/(\w)-(\w)/g, '$1 - $2').replace(/[\-]+/g, " - ").replace(/(\s{2,})/g, " ");
+
+    if (!cleanedDataSet.has(normalize) && element !== '') {
+      cleanedDataSet.add(normalize);
+      let my_return = element.replace(/(\w)-(\w)/g, '$1 - $2').replace(/^[\-]+/g, " - ").replace(/(\s{2,})/g, " ");
+      return my_return;
+    }
+  });
+
+  const counter_for_central_year_current = counterCentral(centrals.sort(), information['yearCurrent'].slice(1));
+  const counter_for_central_year_before = counterCentral(centrals.sort(), information['yearOld'].slice(1));
+  // console.log(counter_for_central);
+
   const labels = [states.SANO, states.SOSPECHOSO, states.PROBABLE, states.CONFIRMADO, states.DIFFERENCE];
 
   Object.keys(state_number).forEach((element: string) => {
@@ -95,9 +114,19 @@ const initInforms = (information: any) => {
   });
 
   series.push({
-    name: 2025,
+    name: new Date().getFullYear(),
     data: data_series,
   })
+
+  // console.log(centrals.sort(), counter_for_central_year_current, counter_for_central_year_before);
+
+  for (const key in centrals.sort()) {
+    info_for_table.push({
+      title: centrals[key],
+      yearNew: counter_for_central_year_current[key],
+      yearOld: counter_for_central_year_before[key]
+    })
+  }
 
   const info = [
     info_for_table,
