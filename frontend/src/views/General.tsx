@@ -3,10 +3,12 @@ import GraphInform from '../components/GraphInform'
 import TableInform from '../components/TableInform'
 
 interface Props {
-  infoGraph: any
+  infoGraph: any,
+  msg: any,
+  dataTable: any
 }
 
-const General: FC<Props> = ({ infoGraph }) => {
+const General: FC<Props> = ({ dataTable, infoGraph, msg }) => {
   const year = new Date().getFullYear()
   return (
     <>
@@ -21,7 +23,7 @@ const General: FC<Props> = ({ infoGraph }) => {
               <GraphInform seriesData={infoGraph[1]} labels={infoGraph[0]} />
             </div>
             <div className='w-full pt-3'>
-              <TableInform />
+              <TableInform dataTable={dataTable} msg={msg} />
             </div>
           </div>
         </div>
