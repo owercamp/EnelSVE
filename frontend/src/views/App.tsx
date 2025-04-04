@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import Container from '../components/container'
 import TitleApp from '../components/title'
 import { BrowserRouter, Link, Navigate, Route, Routes } from 'react-router-dom'
@@ -10,18 +10,21 @@ interface Props { }
 
 const App: FC<Props> = ({ }) => {
 
-  const [informationGraph, setInformationGraph] = React.useState([]);
+  const [informationGraph, setInformationGraph] = useState([]);
+  const [dataTable, setDataTable] = useState([]);
+  const [year, setYear] = useState(new Date().getFullYear());
 
   useEffect(() => {
     google.script.run.withSuccessHandler((result: any) => {
       const total_data = JSON.parse(result);
       const data_from_general = initInforms(total_data);
       setInformationGraph(data_from_general[1]);
+      setDataTable(data_from_general[0]);
     })
       .withFailureHandler((error: any) => {
 
       })
-      .getAll();
+      .getAll(year);
   }, []);
 
   return (
@@ -77,7 +80,7 @@ const App: FC<Props> = ({ }) => {
               } />
               <Route path="/general-inform" element={
                 <div className='mt-[68px]'>
-                  <General infoGraph={informationGraph} />
+                  <General infoGraph={informationGraph} msg={null} dataTable={dataTable} />
                 </div>
               } />
               <Route path="/Aterogenia" element={
