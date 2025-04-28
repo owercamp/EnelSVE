@@ -1,3 +1,6 @@
+import { GET_CONFIG } from "./admin/services/configServices";
+import { GET_AUDIOMETRY_FILTERED, GET_SHEETS } from "./admin/services/sheetServices";
+
 /**
  * Executes when the spreadsheet is opened.
  *
@@ -78,3 +81,62 @@ function abrirInforme() {
     .setWidth(90).setHeight(1);
   SpreadsheetApp.getUi().showModalDialog(html, "Abriendo Informe");
 }
+
+/**
+ *  * Retrieves the best audiometry result for a given ID from multiple sheets.
+ *
+ * @param {string} id - The value of cholesterol.
+ * @return {string} The best audiometry result.
+ * @customfunction
+ */
+function MEJOR_AUDIOMETRIA(id: string) {
+  const sheetInstance: any = GET_SHEETS.getSheets();
+  const dateFormat = new Intl.DateTimeFormat('es-CO', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  });
+  let bestRegister: any[] = [];
+
+  sheetInstance.map((element: any) => {
+    const sheetName: string = element.getSheetName();
+    const config: any = GET_CONFIG.getConfig(sheetName);
+    let range = element.getDataRange().getValues().slice(config.posSlice).map((e: any, index: number) => [...e, index + config.idAument, sheetName]);
+    const registers = GET_AUDIOMETRY_FILTERED.getAudioFilterOld(id, range, config.cc);
+    if (registers.length > 0) {
+      for (const key in registers) {
+        bestRegister.push(
+          [
+            ...registers[key],
+            parseInt(registers[key][config.gatiso].split(".")[0]),
+            registers[key][config.ultimateAudio]
+          ]
+        );
+      }
+    }
+  });
+
+  if (bestRegister.length === 0) {
+    return 'No se encontraron registros en años anteriores.';
+  }
+
+  const bestFilter = bestRegister.reduce((acc: any, curr: any) => {
+    return (parseInt(curr[curr.length - 2]) < parseInt(acc[acc.length - 2]) || (parseInt(curr[curr.length - 1]) > parseInt(acc[acc.length - 1]) && parseInt(curr[curr.length - 2]) === parseInt(acc[acc.length - 2]))) ? curr : acc;
+  }, bestRegister[0]);
+
+  let date_register;
+  switch (true) {
+    case bestFilter[bestFilter.length - 3] === '2015 - 2023':
+      date_register = (bestFilter[23]) ? bestFilter[23] : bestFilter[bestFilter.length - 1];
+      break;
+    case bestFilter[bestFilter.length - 3] === '2024':
+      date_register = (bestFilter[22]) ? bestFilter[22] : bestFilter[bestFilter.length - 1];
+      break;
+    case parseInt(bestFilter[bestFilter.length - 3]) < parseInt(new Date().getFullYear().toString()):
+      date_register = (bestFilter[18]) ? bestFilter[18] : bestFilter[bestFilter.length - 2];
+      break;
+  }
+  return `Fecha:\n${dateFormat.format(date_register)}\nHoja:\n${bestFilter[bestFilter.length - 3]}\nFila:\n${bestFilter[bestFilter.length - 4]}`;
+}
+
+
