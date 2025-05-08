@@ -1,9 +1,7 @@
 import React, { Component, ReactNode } from "react"
+import { ContainerProps } from "../../interfaces/interfaces";
 
-interface ContainerProps {
-  children: ReactNode,
-  classes: string
-}
+
 class Container extends Component<ContainerProps> {
   render(): ReactNode {
     return (
