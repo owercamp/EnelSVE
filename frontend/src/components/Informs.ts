@@ -1,9 +1,16 @@
+import STATUS from "../../models/Status";
 import { counterCentral, filtered, filteredDifferent, normalizeText, unique } from "../services/services";
 import { verifiedZero } from "../services/verified";
 
+const states = new STATUS();
+
+const consult_for_central = (central: string, information: any) => {
+
+}
+
 const counterState = (states: any, registers: any) => {
   let filtering: any;
-  const { SANO, SOSPECHOSO, PROBABLE, CONFIRMADO, DIFFERENCE } = states;
+  const { healthy, suspect, likely, confirm } = states;
   const numberState: any = {
     SANO: [],
     SOSPECHOSO: [],
@@ -13,7 +20,7 @@ const counterState = (states: any, registers: any) => {
   }
 
   //? SANO
-  filtering = filtered(SANO, registers, 50);
+  filtering = filtered(healthy, registers, 50);
   const resultHealthy = verifiedZero(filtering, states.length);
   if (resultHealthy !== undefined) {
     numberState.SANO = 0;
@@ -25,7 +32,7 @@ const counterState = (states: any, registers: any) => {
   }
 
   //? SOSPECHOSO
-  filtering = filtered(SOSPECHOSO, registers, 50);
+  filtering = filtered(suspect, registers, 50);
   const resultSuspect = verifiedZero(filtering, states.length);
   if (resultSuspect !== undefined) {
     numberState.SOSPECHOSO = 0;
@@ -37,7 +44,7 @@ const counterState = (states: any, registers: any) => {
   }
 
   //? PROBABLE
-  filtering = filtered(PROBABLE, registers, 50);
+  filtering = filtered(likely, registers, 50);
   const resultLikely = verifiedZero(filtering, states.length);
   if (resultLikely !== undefined) {
     numberState.PROBABLE = 0;
@@ -49,7 +56,7 @@ const counterState = (states: any, registers: any) => {
   }
 
   //? CONFIRMADO
-  filtering = filtered(CONFIRMADO, registers, 50);
+  filtering = filtered(confirm, registers, 50);
   const resultConfirm = verifiedZero(filtering, states.length);
   if (resultConfirm !== undefined) {
     numberState.CONFIRMADO = 0;
@@ -60,7 +67,7 @@ const counterState = (states: any, registers: any) => {
     numberState.CONFIRMADO = confirm;
   }
 
-  filtering = filteredDifferent([SANO, SOSPECHOSO, PROBABLE, CONFIRMADO], registers, 50);
+  filtering = filteredDifferent([healthy, suspect, likely, confirm], registers, 50);
   const resultDifferent = verifiedZero(filtering, states.length);
   if (resultDifferent !== undefined) {
     numberState.DIFFERENCE = 0;
@@ -78,13 +85,6 @@ const initInforms = (information: any) => {
   let series = [];
   let data_series: any = [];
   let info_for_table: any = [];
-  const states: any = {
-    SANO: 'SANO',
-    SOSPECHOSO: 'SOSPECHOSO',
-    PROBABLE: 'PROBABLE',
-    CONFIRMADO: 'PERDIDA AUDITIVA LABORAL CONFIRMADA',
-    DIFFERENCE: 'SIN ESTADO'
-  }
 
   const state_number = counterState(states, information['yearCurrent'].slice(1));
   let centralsCurrentYear = unique(information['yearCurrent'].slice(1), 6);
@@ -107,7 +107,7 @@ const initInforms = (information: any) => {
   const counter_for_central_year_before = counterCentral(centrals.sort(), information['yearOld'].slice(1));
   // console.log(counter_for_central);
 
-  const labels = [states.SANO, states.SOSPECHOSO, states.PROBABLE, states.CONFIRMADO, states.DIFFERENCE];
+  const labels = states.getAllStates();
 
   Object.keys(state_number).forEach((element: string) => {
     data_series.push(state_number[element]);
@@ -139,4 +139,4 @@ const initInforms = (information: any) => {
   return info;
 }
 
-export { initInforms };
+export { initInforms, consult_for_central };
