@@ -1,12 +1,10 @@
 import React, { FC, useState } from 'react'
 import DataTable, { Alignment, createTheme } from 'react-data-table-component'
+import { ITable } from '../../interfaces/interfaces';
 
-interface Props {
-  dataTable: any
-  msg: any
-}
 
-const TableInform: FC<Props> = ({ dataTable, msg }) => {
+
+const TableInform: FC<ITable> = ({ dataTable, filterToRow }) => {
   const [filterText, setFilterText] = useState('');
 
   const columns = [
@@ -102,7 +100,7 @@ const TableInform: FC<Props> = ({ dataTable, msg }) => {
         }
         customStyles={customStyles}
         subHeaderAlign={Alignment.CENTER}
-
+        onRowClicked={filterToRow}
         theme='solarized'
       />
     </>
