@@ -4,20 +4,35 @@ import TitleApp from '../components/title'
 import { BrowserRouter, Link, Navigate, Route, Routes } from 'react-router-dom'
 import Concept from './Concept'
 import General from './General'
-import { initInforms } from '../components/Informs'
+import { consult_for_central, initInforms } from '../components/Informs'
+import { Props } from '../../interfaces/interfaces'
 
-interface Props { }
 
 const App: FC<Props> = ({ }) => {
 
   const [informationGraph, setInformationGraph] = useState([]);
   const [dataTable, setDataTable] = useState([]);
+  const [total, setTotal]: any = useState([]);
   const [year, setYear] = useState(new Date().getFullYear());
+  const [title, setTitle] = useState('');
+  const [modal, setModal] = useState(false);
+
+  const filterRow = (e: any) => {
+    const central = e.title;
+    setTitle(central);
+    consult_for_central(central, total);
+    changeModal();
+  }
+
+  const changeModal = () => {
+    setModal(!modal);
+  }
 
   useEffect(() => {
     google.script.run.withSuccessHandler((result: any) => {
       const total_data = JSON.parse(result);
       const data_from_general = initInforms(total_data);
+      setTotal(total_data);
       setInformationGraph(data_from_general[1]);
       setDataTable(data_from_general[0]);
     })
@@ -53,20 +68,6 @@ const App: FC<Props> = ({ }) => {
                   </a>
                 </Link>
               </li>
-              <li>
-                <Link to="/Aterogenia">
-                  <a className="max-w-fit inline-flex flex-wrap rounded hover:text-slate-300 transition px-3 py-2 border-r-2 border-l-2 border-gray-400">
-                    Item 3
-                  </a>
-                </Link>
-              </li>
-              <li>
-                <Link to="/Intervencion">
-                  <a className="max-w-fit inline-flex flex-wrap rounded hover:text-slate-300 transition px-3 py-2 border-r-2 border-l-2 border-gray-400">
-                    Item 4
-                  </a>
-                </Link>
-              </li>
             </ul>
           </nav>
 
@@ -80,17 +81,7 @@ const App: FC<Props> = ({ }) => {
               } />
               <Route path="/general-inform" element={
                 <div className='mt-[68px]'>
-                  <General infoGraph={informationGraph} msg={null} dataTable={dataTable} />
-                </div>
-              } />
-              <Route path="/Aterogenia" element={
-                <div className='mt-[68px]'>
-                  <h1>Framingham</h1>
-                </div>
-              } />
-              <Route path="/Intervencion" element={
-                <div className='mt-[68px]'>
-                  <h1>Framingham</h1>
+                  <General infoGraph={informationGraph} msg={null} dataTable={dataTable} filterRow={filterRow} title={title} statusModal={modal} changeModal={changeModal} />
                 </div>
               } />
               <Route path="*" element={<Navigate to="/concept" replace />} />
