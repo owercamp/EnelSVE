@@ -2,9 +2,9 @@
 declare var google: {
   script: {
     run: {
-      withSuccessHandler: (callback: (response: any) => any) => {
-        withFailureHandler: (callback: (error: any) => any) => {
-          [key: string]: any;
+      withSuccessHandler: (callback: (response: T) => T) => {
+        withFailureHandler: (callback: (error: T) => T) => {
+          [key: string]: T;
         };
       };
     };
