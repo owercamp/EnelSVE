@@ -7,8 +7,11 @@ import { IGraphInform } from '../../interfaces/interfaces';
 const GraphInform: FC<IGraphInform> = ({ labels = [], seriesData = [] }) => {
 
   const [state, setState] = useState<{
-    series: any,
-    options: any,
+    series: Array<{
+      name: string,
+      data: number[]
+    }>,
+    options: object,
   }>({
     series: seriesData,
     options: optionCharts(labels)
