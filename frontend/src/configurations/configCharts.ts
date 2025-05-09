@@ -1,4 +1,6 @@
-const optionCharts = (labels: any) => {
+
+
+const optionCharts = <T>(labels: Array<T>) => {
   return {
     chart: {
       type: 'bar',
@@ -100,4 +102,52 @@ const optionCharts = (labels: any) => {
   }
 }
 
-export { optionCharts }
+const optionChartModal = <T>(labels: Array<T>) => {
+  return {
+    chart: {
+      type: 'area',
+      height: 350,
+      stacked: true,
+      events: {
+        selection: function (chart: any, e: any) {
+          console.log(new Date(e.xaxis.min))
+        }
+      },
+      zoom: {
+        enabled: true
+      },
+    },
+    colors: ['#008FFB', '#00E396', '#CED4DC', '#00E396', '#CED4DC'],
+    dataLabels: {
+      enabled: false,
+    },
+    stroke: {
+      curve: 'smooth',
+      width: 2
+    },
+    fill: {
+      type: 'gradient',
+      gradient: {
+        opacityFrom: 0.6,
+        opacityTo: 0.8,
+      }
+    },
+    legend: {
+      position: 'top',
+      horizontalAlign: 'left'
+    },
+    xaxis: {
+      categories: labels,
+      tickPlacement: 'between',
+    },
+    yaxis: {
+      labels: {
+        formatter: function (item: number) {
+          return `${item} casos`
+        }
+      }
+    }
+  }
+}
+
+export { optionCharts, optionChartModal }
