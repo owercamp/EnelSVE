@@ -1,10 +1,10 @@
 import React, { FC, useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { optionCharts } from '../configurations/configCharts';
-import { IGraphInform } from '../../interfaces/interfaces';
+import IGraph from '../../interfaces/IGraph';
 
 
-const GraphInform: FC<IGraphInform> = ({ labels = [], seriesData = [] }) => {
+const GraphInform: FC<IGraph> = ({ labels = [], seriesData = [] }) => {
 
   const [state, setState] = useState<{
     series: Array<{
