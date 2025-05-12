@@ -5,7 +5,7 @@ import { BrowserRouter, Link, Navigate, Route, Routes } from 'react-router-dom'
 import Concept from './Concept'
 import General from './General'
 import { consult_for_central, initInforms } from '../components/Informs'
-import { Props } from '../../interfaces/interfaces'
+import { Props } from '../../interfaces/IProps'
 
 
 const App: FC<Props> = ({ }) => {
@@ -20,7 +20,8 @@ const App: FC<Props> = ({ }) => {
   const filterRow = (e: any) => {
     const central = e.title;
     setTitle(central);
-    consult_for_central(central, total);
+    const for_central = consult_for_central(central, total);
+    console.log(for_central);
     changeModal();
   }
 
@@ -81,7 +82,7 @@ const App: FC<Props> = ({ }) => {
               } />
               <Route path="/general-inform" element={
                 <div className='mt-[68px]'>
-                  <General infoGraph={informationGraph} msg={null} dataTable={dataTable} filterRow={filterRow} title={title} statusModal={modal} changeModal={changeModal} />
+                  <General infoGraph={informationGraph} dataTable={dataTable} filterToRow={filterRow} title={title} statusModal={modal} changeModal={changeModal} />
                 </div>
               } />
               <Route path="*" element={<Navigate to="/concept" replace />} />
