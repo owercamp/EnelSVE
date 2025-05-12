@@ -1,15 +1,52 @@
 import STATUS from "../../models/Status";
+import { GET_CONFIG } from "../configurations/configSheets";
 import { counterCentral, filtered, filteredDifferent, normalizeText, unique } from "../services/services";
 import { verifiedZero } from "../services/verified";
 
 const states = new STATUS();
+const year = new Date().getFullYear();
 
-const consult_for_central = (central: string, information: any) => {
+const consult_for_central = (central: string, information: object) => {
+  let { yearCurrent, yearOld }: object | any = information;
+  let series = [];
+  yearCurrent = filtered(central, yearCurrent.slice(1), GET_CONFIG.getSheetConfig(year, 'central')['position']);
+  yearOld = filtered(central, yearOld.slice(1), GET_CONFIG.getSheetConfig(year, 'central')['position']);
 
+  const labels = states.getAllStates();
+
+  const counter_for_central_year_current = counterState(states, yearCurrent, GET_CONFIG.getSheetConfig(year, 'caso')['position']);
+  const counter_for_central_year_before = counterState(states, yearOld, GET_CONFIG.getSheetConfig(year - 1, 'caso')['position']);
+
+  series.push({
+    name: year,
+    data: [
+      counter_for_central_year_current['SANO'],
+      counter_for_central_year_current['SOSPECHOSO'],
+      counter_for_central_year_current['PROBABLE'],
+      counter_for_central_year_current['CONFIRMADO'],
+      counter_for_central_year_current['DIFFERENCE']
+    ]
+  });
+
+  series.push({
+    name: year - 1,
+    data: [
+      counter_for_central_year_before['SANO'],
+      counter_for_central_year_before['SOSPECHOSO'],
+      counter_for_central_year_before['PROBABLE'],
+      counter_for_central_year_before['CONFIRMADO'],
+      counter_for_central_year_before['DIFFERENCE']
+    ]
+  });
+
+  return [
+    labels,
+    series
+  ];
 }
 
-const counterState = (states: any, registers: any) => {
-  let filtering: any;
+const counterState = (states: any, registers: string[][], pos: number) => {
+  let filtering: string[][];
   const { healthy, suspect, likely, confirm } = states;
   const numberState: any = {
     SANO: [],
@@ -20,7 +57,7 @@ const counterState = (states: any, registers: any) => {
   }
 
   //? SANO
-  filtering = filtered(healthy, registers, 50);
+  filtering = filtered(healthy, registers, pos);
   const resultHealthy = verifiedZero(filtering, states.length);
   if (resultHealthy !== undefined) {
     numberState.SANO = 0;
@@ -32,7 +69,7 @@ const counterState = (states: any, registers: any) => {
   }
 
   //? SOSPECHOSO
-  filtering = filtered(suspect, registers, 50);
+  filtering = filtered(suspect, registers, pos);
   const resultSuspect = verifiedZero(filtering, states.length);
   if (resultSuspect !== undefined) {
     numberState.SOSPECHOSO = 0;
@@ -44,7 +81,7 @@ const counterState = (states: any, registers: any) => {
   }
 
   //? PROBABLE
-  filtering = filtered(likely, registers, 50);
+  filtering = filtered(likely, registers, pos);
   const resultLikely = verifiedZero(filtering, states.length);
   if (resultLikely !== undefined) {
     numberState.PROBABLE = 0;
@@ -56,7 +93,7 @@ const counterState = (states: any, registers: any) => {
   }
 
   //? CONFIRMADO
-  filtering = filtered(confirm, registers, 50);
+  filtering = filtered(confirm, registers, pos);
   const resultConfirm = verifiedZero(filtering, states.length);
   if (resultConfirm !== undefined) {
     numberState.CONFIRMADO = 0;
@@ -67,7 +104,7 @@ const counterState = (states: any, registers: any) => {
     numberState.CONFIRMADO = confirm;
   }
 
-  filtering = filteredDifferent([healthy, suspect, likely, confirm], registers, 50);
+  filtering = filteredDifferent([healthy, suspect, likely, confirm], registers, pos);
   const resultDifferent = verifiedZero(filtering, states.length);
   if (resultDifferent !== undefined) {
     numberState.DIFFERENCE = 0;
@@ -81,14 +118,14 @@ const counterState = (states: any, registers: any) => {
   return numberState;
 }
 
-const initInforms = (information: any) => {
+const initInforms = (information: any): Array<[]> => {
   let series = [];
   let data_series: any = [];
   let info_for_table: any = [];
 
-  const state_number = counterState(states, information['yearCurrent'].slice(1));
-  let centralsCurrentYear = unique(information['yearCurrent'].slice(1), 6);
-  let centralsOldYear = unique(information['yearOld'].slice(1), 6);
+  const state_number = counterState(states, information['yearCurrent'].slice(1), GET_CONFIG.getSheetConfig(year, 'caso')['position']);
+  let centralsCurrentYear = unique(information['yearCurrent'].slice(1), GET_CONFIG.getSheetConfig(year, 'central')['position']);
+  let centralsOldYear = unique(information['yearOld'].slice(1), GET_CONFIG.getSheetConfig(year - 1, 'central')['position']);
   let unionCemtrals = [...centralsCurrentYear, ...centralsOldYear];
   const cleanedDataSet = new Set<string>();
 
@@ -105,7 +142,6 @@ const initInforms = (information: any) => {
 
   const counter_for_central_year_current = counterCentral(centrals.sort(), information['yearCurrent'].slice(1));
   const counter_for_central_year_before = counterCentral(centrals.sort(), information['yearOld'].slice(1));
-  // console.log(counter_for_central);
 
   const labels = states.getAllStates();
 
@@ -117,8 +153,6 @@ const initInforms = (information: any) => {
     name: new Date().getFullYear(),
     data: data_series,
   })
-
-  // console.log(centrals.sort(), counter_for_central_year_current, counter_for_central_year_before);
 
   for (const key in centrals.sort()) {
     info_for_table.push({
