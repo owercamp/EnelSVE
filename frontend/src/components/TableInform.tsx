@@ -76,6 +76,12 @@ const TableInform: FC<IDataTable> = ({ dataTable, filterToRow }) => {
     setFilterText(e.target.value);
   };
 
+  const handleRowClick = (row: any) => {
+    if (filterToRow) {
+      filterToRow(row);
+    }
+  };
+
   return (
     <>
       <DataTable
@@ -100,7 +106,7 @@ const TableInform: FC<IDataTable> = ({ dataTable, filterToRow }) => {
         }
         customStyles={customStyles}
         subHeaderAlign={Alignment.CENTER}
-        onRowClicked={filterToRow}
+        onRowClicked={handleRowClick}
         theme='solarized'
       />
     </>
