@@ -1,11 +1,15 @@
 import React, { FC } from 'react'
 import GraphInform from '../components/GraphInform'
 import TableInform from '../components/TableInform'
-import { IGeneral } from '../../interfaces/interfaces'
 import GraphForCentral from '../components/GraphForCentral'
+import IModalGraph from '../../interfaces/IModalGraph'
+import IDataTable from '../../interfaces/IDataTable'
+import IModal from '../../interfaces/IModal'
+import ITitle from '../../interfaces/ITitle'
+import IInfoGraph from '../../interfaces/IGraphInfo'
 
 
-const General: FC<IGeneral> = ({ dataTable, infoGraph, msg, filterRow, title, statusModal, changeModal }) => {
+const General: FC<IModalGraph & IDataTable & IModal & ITitle & IInfoGraph> = ({ dataTable, infoGraph, filterToRow, title, statusModal, changeModal }) => {
   const year = new Date().getFullYear()
   return (
     <>
@@ -60,7 +64,7 @@ const General: FC<IGeneral> = ({ dataTable, infoGraph, msg, filterRow, title, st
               <GraphInform seriesData={infoGraph[1]} labels={infoGraph[0]} />
             </div>
             <div className='w-full pt-3'>
-              <TableInform dataTable={dataTable} msg={msg} filterToRow={filterRow} />
+              <TableInform dataTable={dataTable} filterToRow={filterToRow} />
             </div>
           </div>
         </div>
