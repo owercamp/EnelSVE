@@ -1,8 +1,8 @@
 import React, { Component, ReactNode } from "react"
-import { ContainerProps } from "../../interfaces/interfaces";
+import IContainer from "../../interfaces/IContainer";
 
 
-class Container extends Component<ContainerProps> {
+class Container extends Component<IContainer> {
   render(): ReactNode {
     return (
       <div className={this.props.classes}>
