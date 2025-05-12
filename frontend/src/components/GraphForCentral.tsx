@@ -4,7 +4,6 @@ import { optionChartModal } from '../configurations/configCharts';
 import IGraph from '../../interfaces/IGraph';
 
 const GraphForCentral: FC<IGraph> = ({ labels = [], seriesData = [] }) => {
-
   const [state, setState] = useState<{
     series: Array<{
       name: string,
@@ -17,8 +16,10 @@ const GraphForCentral: FC<IGraph> = ({ labels = [], seriesData = [] }) => {
   });
 
   useEffect(() => {
-    options: optionChartModal(labels);
-    series: seriesData;
+    setState({
+      series: seriesData,
+      options: optionChartModal(labels)
+    })
   }, [seriesData, labels])
 
   return (
