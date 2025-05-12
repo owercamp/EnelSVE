@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import { Props } from '../../interfaces/interfaces'
+import { Props } from '../../interfaces/IProps'
 
 const Concept: FC<Props> = ({ }) => {
   return (
