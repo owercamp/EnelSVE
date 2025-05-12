@@ -9,7 +9,7 @@ import ITitle from '../../interfaces/ITitle'
 import IInfoGraph from '../../interfaces/IGraphInfo'
 
 
-const General: FC<IModalGraph & IDataTable & IModal & ITitle & IInfoGraph> = ({ dataTable, infoGraph, filterToRow, title, statusModal, changeModal }) => {
+const General: FC<IModalGraph & IDataTable & IModal & ITitle & IInfoGraph> = ({ dataTable, infoGraph, filterToRow, title, statusModal, changeModal, data }) => {
   const year = new Date().getFullYear()
   return (
     <>
@@ -24,20 +24,7 @@ const General: FC<IModalGraph & IDataTable & IModal & ITitle & IInfoGraph> = ({ 
               {title}
             </h3>
             <div className="mt-2">
-              <GraphForCentral labels={['number 1', 'number 2', 'number 3', 'number 4', 'number 5']} seriesData={[
-                {
-                  name: 'South',
-                  data: [90, 61, 21, 31, 84]
-                },
-                {
-                  name: 'North',
-                  data: [20, 30, 40, 50, 60]
-                },
-                {
-                  name: 'Central',
-                  data: [45, 78, 15, 45, 96]
-                }
-              ]} />
+              <GraphForCentral labels={data[0]} seriesData={data[1]} />
             </div>
           </div>
           <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
