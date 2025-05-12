@@ -1,10 +1,10 @@
 import React, { FC, useState } from 'react'
 import DataTable, { Alignment, createTheme } from 'react-data-table-component'
-import { ITable } from '../../interfaces/interfaces';
+import IDataTable from '../../interfaces/IDataTable';
 
 
 
-const TableInform: FC<ITable> = ({ dataTable, filterToRow }) => {
+const TableInform: FC<IDataTable> = ({ dataTable, filterToRow }) => {
   const [filterText, setFilterText] = useState('');
 
   const columns = [
