@@ -16,13 +16,13 @@ const App: FC<Props> = ({ }) => {
   const [year, setYear] = useState(new Date().getFullYear());
   const [title, setTitle] = useState('');
   const [modal, setModal] = useState(false);
-  const [filterDataRow, setFilterDataRow]: any = useState([]);
+  const [data, setData]: any = useState([[], []]);
 
   const filterRow = (e: any) => {
     const central = e.title;
     setTitle(central);
     const for_central = consult_for_central(central, total);
-    setFilterDataRow(for_central);
+    setData(for_central);
     changeModal();
   }
 
@@ -83,7 +83,7 @@ const App: FC<Props> = ({ }) => {
               } />
               <Route path="/general-inform" element={
                 <div className='mt-[68px]'>
-                  <General infoGraph={informationGraph} dataTable={dataTable} filterToRow={filterRow} title={title} statusModal={modal} changeModal={changeModal} data={filterDataRow} />
+                  <General infoGraph={informationGraph} dataTable={dataTable} filterToRow={filterRow} title={title} statusModal={modal} changeModal={changeModal} data={data} />
                 </div>
               } />
               <Route path="*" element={<Navigate to="/concept" replace />} />
