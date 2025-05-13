@@ -10,7 +10,9 @@ import IInfoGraph from '../../interfaces/IGraphInfo'
 
 
 const General: FC<IModalGraph & IDataTable & IModal & ITitle & IInfoGraph> = ({ dataTable, infoGraph, filterToRow, title, statusModal, changeModal, data }) => {
-  const year = new Date().getFullYear()
+  const year = new Date().getFullYear();
+  const safeData = data || [[], []];
+
   return (
     <>
       <div className={`fixed z-50 inset-0 flex items-center justify-center overflow-hidden ${statusModal ? 'flex' : 'hidden'}`}>
@@ -24,7 +26,7 @@ const General: FC<IModalGraph & IDataTable & IModal & ITitle & IInfoGraph> = ({ 
               {title}
             </h3>
             <div className="mt-2">
-              <GraphForCentral labels={data[0]} seriesData={data[1]} />
+              <GraphForCentral labels={safeData[0]} seriesData={safeData[1]} />
             </div>
           </div>
           <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
