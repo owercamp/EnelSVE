@@ -18,7 +18,7 @@ const unique = (information: any, position: number) => {
 
 const filtered = (state: string, registers: any, position: number) => {
   const filtrado = registers.filter((subArray: any) => {
-    const element = subArray[position];
+    const element = String(subArray[position]).toUpperCase().trim();
     return element && element.includes(state);
   });
 
