@@ -6,6 +6,7 @@ import Concept from './Concept'
 import General from './General'
 import { consult_for_central, initInforms } from '../components/Informs'
 import { Props } from '../../interfaces/IProps'
+import FileUploader from '../components/FileUploader'
 
 
 const App: FC<Props> = ({ }) => {
@@ -69,6 +70,9 @@ const App: FC<Props> = ({ }) => {
                     Informe General
                   </a>
                 </Link>
+              </li>
+              <li>
+                <FileUploader />
               </li>
             </ul>
           </nav>
