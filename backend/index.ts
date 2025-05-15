@@ -149,10 +149,10 @@ function insertInfo(register: Array<string>) {
     lock.waitLock(30000);
     sheet?.appendRow(register);
 
-    return register;
+    return "success";
   } catch (error) {
     lock.releaseLock();
-    return error;
+    return "failure";
   } finally {
     lock.releaseLock();
   }
