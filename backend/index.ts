@@ -139,4 +139,22 @@ function MEJOR_AUDIOMETRIA(id: string) {
   return `Fecha:\n${dateFormat.format(date_register)}\nHoja:\n${bestFilter[bestFilter.length - 3]}\nFila:\n${bestFilter[bestFilter.length - 4]}`;
 }
 
+function insertInfo(register: Array<string>) {
+  const year: Number = new Date().getFullYear();
+  const book: GoogleAppsScript.Spreadsheet.Spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet: GoogleAppsScript.Spreadsheet.Sheet | null = book.getSheetByName(String(year));
+  const lock = LockService.getScriptLock();
+
+  try {
+    lock.waitLock(30000);
+    sheet?.appendRow(register);
+
+    return register;
+  } catch (error) {
+    lock.releaseLock();
+    return error;
+  } finally {
+    lock.releaseLock();
+  }
+}
 
