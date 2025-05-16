@@ -18,7 +18,7 @@ const Spinner: FC<SpinnerProps> = ({ current, total, className, setSpinner }) =>
 
   return (
     <div className={`relative inline-block ${className}`}>
-      <div className="relative w-72 h-72">
+      <div className="relative w-80 h-80">
         {/* Fondo estático */}
         <div className="absolute inset-0 border-[10px] border-gray-200 rounded-full" />
 
