@@ -1,34 +1,14 @@
-import React, { useState, useRef, FC } from 'react';
-import { Props } from '../../interfaces/IProps';
-import { InsertRegister } from '../services/insert';
-// import * as XLSX from "xlsx";
+import React, { FC, useRef } from 'react';
 
-interface ExcelData {
-  [key: string]: string | number;
+interface Props {
+  handleFile: any
 }
 
-const FileUploader: FC<Props> = () => {
-  const [data, setData] = useState<ExcelData[]>([]);
+const FileUploader: FC<Props> = ({ handleFile }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleButtonClick = () => {
     fileInputRef.current?.click();
-  };
-
-  const handleFile: any = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    try {
-      const arrayBuffer = await file.arrayBuffer();
-      const workbook = XLSX.read(arrayBuffer, { type: 'array' });
-      const firstSheet = workbook.SheetNames[0];
-      const worksheet = workbook.Sheets[firstSheet];
-      const jsonData = XLSX.utils.sheet_to_json<ExcelData>(worksheet);
-      InsertRegister(jsonData);
-    } catch (error) {
-      console.error('Error:', error);
-    }
   };
 
   return (
