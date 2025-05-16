@@ -7,6 +7,10 @@ import General from './General'
 import { consult_for_central, initInforms } from '../components/Informs'
 import { Props } from '../../interfaces/IProps'
 import FileUploader from '../components/FileUploader'
+import Spinner from '../components/SpinnerWithCounter'
+import ExcelData from '../../interfaces/IExcel'
+import { InsertRegister } from '../services/insert'
+// import * as XLSX from "xlsx"
 
 
 const App: FC<Props> = ({ }) => {
@@ -17,7 +21,10 @@ const App: FC<Props> = ({ }) => {
   const [year, setYear] = useState(new Date().getFullYear());
   const [title, setTitle] = useState('');
   const [modal, setModal] = useState(false);
+  const [spinner, setSpinner] = useState(false);
+  const [counter, setCounter] = useState(1);
   const [data, setData]: any = useState([[], []]);
+  const [totalRegister, setTotalRegister] = useState(0);
 
   const filterRow = (e: any) => {
     const central = e.title;
@@ -26,6 +33,24 @@ const App: FC<Props> = ({ }) => {
     setData(for_central);
     changeModal();
   }
+
+  const handleFile: any = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      setSpinner(!spinner);
+      const arrayBuffer = await file.arrayBuffer();
+      const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+      const firstSheet = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[firstSheet];
+      const jsonData = XLSX.utils.sheet_to_json<ExcelData>(worksheet);
+      setTotalRegister(jsonData.length);
+      InsertRegister(jsonData, setCounter, counter);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
 
   const changeModal = () => {
     setModal(!modal);
@@ -47,6 +72,9 @@ const App: FC<Props> = ({ }) => {
 
   return (
     <Container classes="w-screen h-screen">
+      <div className={`fixed w-screen h-screen z-[2000] justify-center items-center bg-black/80 ${(spinner) ? 'flex' : 'hidden'}`}>
+        <Spinner current={counter} total={totalRegister} setSpinner={setSpinner} />
+      </div>
       <BrowserRouter>
         <div className="w-screen h-screen flex flex-col">
           <nav className="w-full fixed z-50 flex flex-wrap md:flex-nowrap items-center justify-between bg-soa-light-700 dark:bg-soa-dark-900 px-4 py-1">
@@ -72,7 +100,7 @@ const App: FC<Props> = ({ }) => {
                 </Link>
               </li>
               <li>
-                <FileUploader />
+                <FileUploader handleFile={handleFile} />
               </li>
             </ul>
           </nav>
