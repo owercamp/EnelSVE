@@ -2,14 +2,17 @@ import BOOK from "../../models/Book";
 import ITEMS from "../configurations/configItems";
 import InsertDTO from "../Dto/InsertDto";
 
-const InsertRegister = (array: Array<object>) => {
+const InsertRegister = async (array: Array<object>, setCount: any, count: number) => {
   const book = new BOOK();
   for (const element of array) {
-    RegisterInformation(element, book);
+    let res = await RegisterInformation(element, book);
+    if (res === "success") {
+      setCount(count++);
+    }
   }
 }
 
-const RegisterInformation = (values: object | any, book: BOOK) => {
+const RegisterInformation = async (values: object | any, book: BOOK) => {
   const structure: any = {};
   const Items: any = new ITEMS(book);
 
@@ -60,14 +63,16 @@ const RegisterInformation = (values: object | any, book: BOOK) => {
   );
 
   const registerArray = Object.values(register);
+  const result = await serverCall(registerArray);
+  return result;
+}
 
-  google.script.run.withSuccessHandler(response => {
-    console.log(response);
+const serverCall = (registers: Array<string>) => {
+  return new Promise<string>((resolve, reject) => {
+    google.script.run.withSuccessHandler(resolve)
+      .withFailureHandler(reject)
+      .insertInfo(registers);
   })
-    .withFailureHandler(error => {
-
-    })
-    .insertInfo(registerArray);
 }
 
 export { InsertRegister };
